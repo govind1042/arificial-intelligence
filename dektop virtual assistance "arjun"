@@ -1,0 +1,107 @@
+import pyttsx3
+import datetime
+import speech_recognition as sr
+import wikipedia
+import webbrowser
+import os
+
+
+
+
+engine = pyttsx3.init('sapi5')
+Voices = engine.getProperty('voices')
+print(Voices)
+print(Voices[1].id)
+engine.setProperty('voices', Voices[1].id)
+
+
+
+def takeCommand():
+    #it takes microphone input from the user nad return string output.
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.pause_threshold = 0.5
+        r.energy_threshold = 200
+        audio = r.listen(source)
+
+    try:
+        print("Recognizing...")
+        query = r.recognize_google(audio, language="en-in")
+        print(f"User said: {query}\n")
+
+    except Exception as e:
+        print(e)
+        print("Say That Again Please...")
+        return "None"
+    return query
+
+        
+
+def speak(audio):
+    engine.say(audio)
+    engine.runAndWait()
+
+
+
+
+def wishMe():
+    hour = int(datetime.datetime.now().hour)
+    if hour>=0 and hour<12:
+        speak("Good Morning!")
+    elif hour >= 12 and hour <18:
+        speak("Good Afternoon !")
+    else:
+        speak("Good Evening!")
+
+    speak("I am ARJUN sir. How may I help you")
+
+
+if __name__ == "__main__":
+    wishMe()
+    while True:
+        query = takeCommand().lower()
+        if 'wikipedia' in query:
+            speak('Searching Wikipedia')
+            query = query.replace("wikipedia","")
+            results = wikipedia.summary(query, sentences=2)
+            speak("According to wikipedia")
+            print(results)
+            speak(results)
+        elif 'open google' in query:
+            webbrowser.open("https://www.google.co.in/")
+        elif 'open stackoverflow' in query:
+            webbrowser.open("stachoverflow.com")
+        elif 'what is going on' in query:
+            speak("just chilling , but i am always ready for you sir.")
+        elif 'play music' in query:
+            music_dir = 'C:\\Users\GOVIND\Desktop\EVERYTHING\public\music'
+            songs = os.listdir(music_dir)
+            print(songs)
+            os.startfile(os.path.join(music_dir,songs[0]))
+        elif 'open code' in query:
+            codePath = "C:\\Users\GOVIND\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+            os.startfile(codePath)
+        elif 'open youtube' in query:
+            webbrowser.open("https://www.youtube.com/")
+        elif 'open movies' in query:
+            codepath = "C:\dektop hp\local disk D\movies"
+            os.startfile(codepath)
+        elif 'the time' in query:
+            strTime = datetime.datetime.now().strftime("%H:%M:%S")
+            speak(f"Sir, the time is {strTime}")    
+        elif 'who are you' in query:
+            speak("Sir, i am Arjun, a desktop virtual assiatance and my purpose is to make your work simple and easy")    
+        elif 'open my playlist' in query:
+            webbrowser.open("https://www.youtube.com/watch?v=WFoSWPeqi7U&list=RDWFoSWPeqi7U&start_radio=1")
+        elif 'show some news' in query:
+            webbrowser.open("https://www.youtube.com/results?search_query=aaj+tak+live")
+        elif 'take note' in query:
+            codePath = "C:\softwares\notepad++.exe"
+            os.startfile(codePath)
+        
+
+
+
+        
+            
